@@ -16,9 +16,10 @@ public class TobyApplication {
             servletContext.addServlet("hello", new HttpServlet() {
                 @Override
                 protected void service(HttpServletRequest req, HttpServletResponse resp) throws  ServletException, IOException {
+                    String name = req.getParameter("name");
                     resp.setStatus(200);
                     resp.setHeader("Content-Type", "text/plain");
-                    resp.getWriter().print("Hello Servlet");
+                    resp.getWriter().print("Hello Servlet " + name);
                 }
             }).addMapping("/hello");
         });
