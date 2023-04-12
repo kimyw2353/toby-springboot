@@ -17,11 +17,13 @@ import java.io.IOException;
 
 public class TobyApplication {
     public static void main(String[] args) {
+        GenericApplicationContext applicationContext = new GenericApplicationContext();
+        applicationContext.registerBean(HelloController.class);
+        applicationContext.registerBean(SimpleHelloService.class);
+        applicationContext.refresh();
+
         ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
         WebServer webServer = serverFactory.getWebServer(servletContext -> {
-            GenericApplicationContext applicationContext = new GenericApplicationContext();
-            applicationContext.registerBean(HelloController.class);
-            applicationContext.refresh();
             servletContext.addServlet("frontController", new HttpServlet() {
                 @Override
                 protected void service(HttpServletRequest req, HttpServletResponse resp) throws  ServletException, IOException {
