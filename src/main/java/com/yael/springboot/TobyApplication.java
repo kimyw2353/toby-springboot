@@ -3,26 +3,28 @@ package com.yael.springboot;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
-import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.context.support.GenericWebApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * 스프링 컨테이너의 초기화 작업은 .refresh() 메소드가 호출될 때 수행됨.
+ * @Configuration (구성정보를 가진 클래스) 어노테이션이 붙은 클래스에는 스프링이 @Bean 메서드가 붙은 팩토리 메소드가 있겠구나 알고 생성해줌.
  */
+@Configuration
 public class TobyApplication {
+    @Bean
+    public HelloController helloController(HelloService helloService) {
+        return new HelloController(helloService);
+    }
+
+    @Bean
+    public HelloService helloService() {
+        return new SimpleHelloService();
+    }
     public static void main(String[] args) {
-        GenericWebApplicationContext applicationContext = new GenericWebApplicationContext() {
+        AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext() {
             @Override
             protected void onRefresh() {
                 super.onRefresh();
@@ -37,9 +39,7 @@ public class TobyApplication {
             }
         };
 
-        applicationContext.registerBean(HelloController.class);
-        applicationContext.registerBean(SimpleHelloService.class);
+        applicationContext.register(TobyApplication.class);
         applicationContext.refresh();
-
     }
 }
