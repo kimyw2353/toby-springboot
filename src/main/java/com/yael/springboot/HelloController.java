@@ -1,9 +1,7 @@
 package com.yael.springboot;
 
-import org.springframework.stereotype.Component;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
@@ -18,9 +16,14 @@ import java.util.Objects;
 @RestController
 public class HelloController {
     private final HelloService helloService;
+    private ApplicationContext applicationContext; //final로 만들면 안됨. 생성자를 통해 인스턴스가 다 만들어진 후 호출되기 때문
 
-    public HelloController(HelloService helloService) {
+    public HelloController(HelloService helloService, ApplicationContext applicationContext) {
         this.helloService = helloService;
+        this.applicationContext = applicationContext;
+        System.out.println("===============");
+        System.out.println(applicationContext);
+        System.out.println("===============");
     }
 
     @GetMapping("/hello")
