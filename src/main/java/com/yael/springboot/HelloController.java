@@ -18,16 +18,15 @@ public class HelloController {
     private final HelloService helloService;
     private ApplicationContext applicationContext; //final로 만들면 안됨. 생성자를 통해 인스턴스가 다 만들어진 후 호출되기 때문
 
-    public HelloController(HelloService helloService, ApplicationContext applicationContext) {
+    public HelloController(HelloService helloService) {
         this.helloService = helloService;
-        this.applicationContext = applicationContext;
-        System.out.println("===============");
-        System.out.println(applicationContext);
-        System.out.println("===============");
     }
 
     @GetMapping("/hello")
     public String hello(String name) {
+        if (name == null || name.trim().length() == 0)
+            throw new IllegalArgumentException();
+
         return helloService.sayHello(Objects.requireNonNull(name));
     }
 }
